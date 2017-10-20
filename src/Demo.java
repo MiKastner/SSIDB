@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 
 public class Demo {
@@ -71,7 +70,7 @@ public class Demo {
 
     }
 
-    public static <E, F> boolean verify(ArrayList<E> r, ArrayList<F> M, double t){
+    private static <E, F> boolean verify(ArrayList<E> r, ArrayList<F> M, double t){
         return false;
     }
 }
