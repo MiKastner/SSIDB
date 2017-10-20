@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 
 public class Demo {
     public static void main(String[] args) throws Exception {
@@ -11,6 +12,8 @@ public class Demo {
             return;
         }
 
+        double threshold = Double.parseDouble(args[1]);
+
         // open file for reading
         // if the file is not found the method will throw an exception and exit
         BufferedReader b = new BufferedReader(new FileReader(args[0]));
@@ -19,9 +22,30 @@ public class Demo {
         String line = b.readLine();
 
         // as long as there are lines in the file
+
+
+        ArrayList<ArrayList> set = new ArrayList<>();
+
         while (line != null) {
+            ArrayList<Integer> item = new ArrayList<>();
+            StringBuilder s = new StringBuilder();
+
+            for (int j=0; j<line.length(); j++) {
+                if (line.charAt(j) != ' ')
+                    s.append(line.charAt(j));
+                if (line.charAt(j) == ' ' || j==line.length()-1){
+                    item.add(Integer.parseInt(s.toString()));
+                    s = new StringBuilder();
+                }
+            }
+            set.add(item);
             // read next line from file
             line = b.readLine();
         }
+
+        System.out.println(set);
+        System.out.println(threshold);
+
     }
 }
+
