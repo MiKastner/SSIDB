@@ -48,30 +48,22 @@ public class Demo {
         System.out.println(threshold);
 
 
-        System.out.println(jacSim(set.get(1), set.get(2)));
 
     }
 
-    private static <E> double jacSim(ArrayList<E> r, ArrayList<E> s){
-        HashSet<E> intersect = new HashSet<>();
-        HashSet<E> union = new HashSet<>();
-
-        // get union of r and s
-        union.addAll(r);
-        union.addAll(s);
-
-        // get intersect
-        for (E item: union){
-            if (s.contains(item) && r.contains(item))
-                intersect.add(item);
-        }
-
-        return (double)intersect.size()/union.size();
-
+    // size lower bound on join partners for r
+    private static int lb(ArrayList<Integer> r, double t){
+        return (int)Math.ceil(r.size()*t);
     }
 
-    private static <E, F> boolean verify(ArrayList<E> r, ArrayList<F> M, double t){
-        return false;
+    // size upper bound on join partners for r
+    private static int ub(ArrayList<Integer> r, double t){
+        return (int)Math.floor(r.size()/t);
     }
+    // probing prefix length, pseudo code pi_r
+    private static int ppl(ArrayList<Integer> r, double t){
+        return r.size()-lb(r, t)+1;
+    }
+
 }
 
