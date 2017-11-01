@@ -46,9 +46,11 @@ public class Demo {
 
         System.out.println(set);
         System.out.println(threshold);
+    }
 
-
-
+    // indexing prefix length, pseudo code (pi_r)^I
+    private static int eqo(ArrayList<Integer> r, ArrayList<Integer> s, double t) {
+        return (int) Math.ceil(t/(t + 1) * (r.size() + s.size()));
     }
 
     // size lower bound on join partners for r
@@ -62,7 +64,12 @@ public class Demo {
     }
     // probing prefix length, pseudo code pi_r
     private static int ppl(ArrayList<Integer> r, double t){
-        return r.size()-lb(r, t)+1;
+        return r.size() - lb(r, t) + 1;
+    }
+
+    // indexing prefix length, pseudo code (pi_r)^I
+    private static int ipl(ArrayList<Integer> r, double t){
+        return r.size() - eqo(r, r, t) + 1;
     }
 
     // inverted list, contains index of lists which contain p
@@ -74,6 +81,33 @@ public class Demo {
         return invList;
     }
 
+    // verify
+    private static ArrayList<Integer> verify(ArrayList<Integer> r, ArrayList<Integer> M, double t){
+        return null;
+    }
+
+    // allPairs
+    private static ArrayList<ArrayList<Integer>> allPairs(ArrayList<ArrayList<Integer>> R, double t){
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();  // resolution
+        for (ArrayList<Integer> r: R){
+            ArrayList<Integer> M = new ArrayList<>();   // dictionary for candidate sets
+            for (int p=0; p<ppl(r, t)-1; p++){
+                ArrayList<Integer> I = invList(p, R);   // inverted list, all sets of R containing p
+                for (int s=0; s<I.size(); s++){
+                    if(R.get(s).size()<lb(r, t))    // delete too short sets
+                        I.remove(s);
+                    else {
+                        int index = I.get(s);
+                        if (!M.contains(index))
+                            M.add(index, 0);
+                        M.add(index, M.get(index) + 1);
+                    }
+                }
+            }
+            res.add(M);
+        }
+        return res;
+    }
 
 }
 
