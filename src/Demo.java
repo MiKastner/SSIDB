@@ -65,5 +65,15 @@ public class Demo {
         return r.size()-lb(r, t)+1;
     }
 
+    // inverted list, contains index of lists which contain p
+    private static ArrayList<Integer> invList(Integer p, ArrayList<ArrayList<Integer>> list){
+        ArrayList<Integer> invList = new ArrayList<>();
+        for (int i=0; i<list.size(); i++)
+            if (list.get(i).contains(p))
+                invList.add(i);
+        return invList;
+    }
+
+
 }
 
