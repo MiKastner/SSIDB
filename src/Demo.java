@@ -85,7 +85,7 @@ public class Demo {
     }
 
     // verify
-    private static ArrayList<Integer> verify(ArrayList<Integer> r, HashMap<Integer, Integer> M, double t){
+    private static ArrayList<Integer> verify(ArrayList<Integer> r, HashMap<ArrayList<Integer>, Integer> M, double t){
         return null;
     }
 
@@ -94,7 +94,7 @@ public class Demo {
         ArrayList<ArrayList<Integer>> res = new ArrayList<>();  // resolution
         HashMap<Integer, ArrayList<Integer>> I = new HashMap<>();   // inverted list, key candidate set, value number of intersecting tokens
         for (ArrayList<Integer> r: R){
-            HashMap<Integer, Integer> M = new HashMap<>();   // dictionary for candidate sets, first item index, second #
+            HashMap<ArrayList<Integer>, Integer> M = new HashMap<>();   // dictionary for candidate sets, first item index, second #
             for (int p=0; p<ppl(r, t)-1; p++){
                 if(I.get(p)!=null) //???????????????????????????????????????
                     for (Integer s: I.get(p)){
@@ -102,9 +102,9 @@ public class Demo {
                             I.remove(s);
                         else {
                             if (!M.containsKey(s)){
-                                M.put(s, 0);
+                                M.put(R.get(s), 0);
                             }
-                            M.put(s, M.get(s) + 1);
+                            M.put(R.get(s), M.get(R.get(s)) + 1);
                         }
                     }
             }
