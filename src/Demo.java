@@ -2,7 +2,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 public class Demo {
     public static void main(String[] args) throws Exception {
@@ -46,6 +48,7 @@ public class Demo {
 
         System.out.println(set);
         System.out.println(threshold);
+        System.out.println(allPairs(set, threshold));
     }
 
     // indexing prefix length, pseudo code (pi_r)^I
@@ -72,8 +75,8 @@ public class Demo {
         return r.size() - eqo(r, r, t) + 1;
     }
 
-    // inverted list, contains index of lists which contain p
-    private static ArrayList<Integer> invList(Integer p, ArrayList<ArrayList<Integer>> list){
+    // inverted list, contains index of all lists which contain p
+    private static ArrayList<Integer> invList(Integer p, List<ArrayList<Integer>> list){
         ArrayList<Integer> invList = new ArrayList<>();
         for (int i=0; i<list.size(); i++)
             if (list.get(i).contains(p))
@@ -82,29 +85,36 @@ public class Demo {
     }
 
     // verify
-    private static ArrayList<Integer> verify(ArrayList<Integer> r, ArrayList<Integer> M, double t){
+    private static ArrayList<Integer> verify(ArrayList<Integer> r, HashMap<Integer, Integer> M, double t){
         return null;
     }
 
     // allPairs
     private static ArrayList<ArrayList<Integer>> allPairs(ArrayList<ArrayList<Integer>> R, double t){
         ArrayList<ArrayList<Integer>> res = new ArrayList<>();  // resolution
+        HashMap<Integer, ArrayList<Integer>> I = new HashMap<>();   // inverted list, key candidate set, value number of intersecting tokens
         for (ArrayList<Integer> r: R){
-            ArrayList<Integer> M = new ArrayList<>();   // dictionary for candidate sets
+            HashMap<Integer, Integer> M = new HashMap<>();   // dictionary for candidate sets, first item index, second #
             for (int p=0; p<ppl(r, t)-1; p++){
-                ArrayList<Integer> I = invList(p, R);   // inverted list, all sets of R containing p
-                for (int s=0; s<I.size(); s++){
-                    if(R.get(s).size()<lb(r, t))    // delete too short sets
-                        I.remove(s);
-                    else {
-                        int index = I.get(s);
-                        if (!M.contains(index))
-                            M.add(index, 0);
-                        M.add(index, M.get(index) + 1);
+                if(I.get(p)!=null) //???????????????????????????????????????
+                    for (Integer s: I.get(p)){
+                        if(R.get(s).size()<lb(r, t))    // delete too short sets
+                            I.remove(s);
+                        else {
+                            if (!M.containsKey(s)){
+                                M.put(s, 0);
+                            }
+                            M.put(s, M.get(s) + 1);
+                        }
                     }
-                }
             }
-            res.add(M);
+            for (int p=0; p<ipl(r, t); p++){
+                if (I.get(p)!=null)
+                    I.get(p).add(R.indexOf(r));
+                else
+                    I.put(p, new ArrayList<>(R.indexOf(r)));
+            }
+            res.add(verify(r, M, t));
         }
         return res;
     }
