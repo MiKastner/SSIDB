@@ -1,10 +1,7 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class Demo {
     public static void main(String[] args) throws Exception {
@@ -92,28 +89,42 @@ public class Demo {
     // allPairs
     private static ArrayList<ArrayList<Integer>> allPairs(ArrayList<ArrayList<Integer>> R, double t){
         ArrayList<ArrayList<Integer>> res = new ArrayList<>();  // resolution
-        HashMap<Integer, ArrayList<Integer>> I = new HashMap<>();   // inverted list, key candidate set, value number of intersecting tokens
+        HashMap<Integer, ArrayList<ArrayList<Integer>>> I = new HashMap<>();   // inverted list, key value, value intersecting sets
         for (ArrayList<Integer> r: R){
-            HashMap<ArrayList<Integer>, Integer> M = new HashMap<>();   // dictionary for candidate sets, first item index, second #
-            for (int p=0; p<ppl(r, t)-1; p++){
-                if(I.get(p)!=null) //???????????????????????????????????????
-                    for (Integer s: I.get(p)){
-                        if(R.get(s).size()<lb(r, t))    // delete too short sets
-                            I.remove(s);
-                        else {
-                            if (!M.containsKey(s)){
-                                M.put(R.get(s), 0);
-                            }
-                            M.put(R.get(s), M.get(R.get(s)) + 1);
+            HashMap<ArrayList<Integer>, Integer> M = new HashMap<>();   // dictionary for candidate sets, key set, value #intersections
+            for (int p=0; p<ppl(r, t); p++){
+                int j = 0;      // Korrekturindex falls Element aus I gelöscht wird, ansonsten wird naechstes Element übersprungen
+                if(I.get(r.get(p))!=null)
+                    //for (ArrayList<Integer> s: I.get(r.get(p))){        // cant remove element in foreach loop!!!!
+                    for(int i=0; i< I.get(r.get(p)).size(); i++){
+                        ArrayList<Integer> s = I.get(r.get(p)).get(i-j);
+                        if (s.size()<lb(r, t)) {
+                            ArrayList<ArrayList<Integer>> x = I.get(r.get(p));
+                            x.remove(s);
+                            I.put(r.get(p), x);
+                            j++;
                         }
+                        else {
+                            if (!M.containsKey(s))
+                                M.put(s, 0);
+                            int x = M.get(s) + 1;
+                            M.put(s, x);
+                        }
+
                     }
             }
             for (int p=0; p<ipl(r, t); p++){
-                if (I.get(p)!=null)
-                    I.get(p).add(R.indexOf(r));
-                else
-                    I.put(p, new ArrayList<>(R.indexOf(r)));
+                ArrayList<ArrayList<Integer>> x = I.get(r.get(p));
+                if (x==null)
+                    x = new ArrayList<>();
+                x.add(r);
+                I.put(r.get(p), x);
             }
+            System.out.println("pi_r: " + ppl(r,t));
+            System.out.println("pi_r^i: " + ipl(r,t));
+            System.out.println("lb_r: " + lb(r,t));
+            System.out.println("I: " + I);
+            System.out.println("M: " + M);
             res.add(verify(r, M, t));
         }
         return res;
