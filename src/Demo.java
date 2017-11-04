@@ -89,9 +89,9 @@ public class Demo {
     // allPairs
     private static ArrayList<ArrayList<Integer>> allPairs(ArrayList<ArrayList<Integer>> R, double t){
         ArrayList<ArrayList<Integer>> res = new ArrayList<>();  // resolution
-        HashMap<Integer, ArrayList<ArrayList<Integer>>> I = new HashMap<>();   // inverted list, key value, value intersecting sets
+        HashMap<Integer, ArrayList<ArrayList<Integer>>> I = new HashMap<>();   // inverted list, key tokens, value sets containing key
         for (ArrayList<Integer> r: R){
-            HashMap<ArrayList<Integer>, Integer> M = new HashMap<>();   // dictionary for candidate sets, key set, value #intersections
+            HashMap<ArrayList<Integer>, Integer> M = new HashMap<>();   // dictionary for candidate sets, key set, value number of intersecting tokens
             for (int p=0; p<ppl(r, t); p++){
                 int j = 0;      // Korrekturindex falls Element aus I gelöscht wird, ansonsten wird naechstes Element übersprungen
                 if(I.get(r.get(p))!=null)
@@ -110,7 +110,6 @@ public class Demo {
                             int x = M.get(s) + 1;
                             M.put(s, x);
                         }
-
                     }
             }
             for (int p=0; p<ipl(r, t); p++){
@@ -120,11 +119,13 @@ public class Demo {
                 x.add(r);
                 I.put(r.get(p), x);
             }
+            // debug
             System.out.println("pi_r: " + ppl(r,t));
             System.out.println("pi_r^i: " + ipl(r,t));
             System.out.println("lb_r: " + lb(r,t));
             System.out.println("I: " + I);
             System.out.println("M: " + M);
+
             res.add(verify(r, M, t));
         }
         return res;
