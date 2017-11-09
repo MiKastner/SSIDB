@@ -90,19 +90,28 @@ public class Demo {
     private static ArrayList<ArrayList<Integer>> allPairs(ArrayList<ArrayList<Integer>> R, double t){
         ArrayList<ArrayList<Integer>> res = new ArrayList<>();  // resolution
         HashMap<Integer, ArrayList<ArrayList<Integer>>> I = new HashMap<>();   // inverted list, key tokens, value sets containing key
+        HashMap<Integer, Integer> start = new HashMap<>();  // start Index for Inverted list instead removing token
         for (ArrayList<Integer> r: R){
             HashMap<ArrayList<Integer>, Integer> M = new HashMap<>();   // dictionary for candidate sets, key set, value number of intersecting tokens
             for (int p=0; p<ppl(r, t); p++){
-                int j = 0;      // Korrekturindex falls Element aus I gelöscht wird, ansonsten wird naechstes Element übersprungen
-                if(I.get(r.get(p))!=null)
+                //int j = 0;      // Korrekturindex falls Element aus I gelöscht wird, ansonsten wird naechstes Element übersprungen
+                Integer key = r.get(p);
+                if(I.get(key)!=null)
                     //for (ArrayList<Integer> s: I.get(r.get(p))){        // cant remove element in foreach loop!!!!
-                    for(int i=0; i< I.get(r.get(p)).size(); i++){
-                        ArrayList<Integer> s = I.get(r.get(p)).get(i-j);
+                    for(int i=0; i< I.get(key).size(); i++){
+                        if (i==0 && start.containsValue(key))
+                            i = start.get(key);
+                        ArrayList<Integer> s = I.get(key).get(i); // -j);
                         if (s.size()<lb(r, t)) {
-                            ArrayList<ArrayList<Integer>> x = I.get(r.get(p));
-                            x.remove(s);
-                            I.put(r.get(p), x);
-                            j++;
+                            // ArrayList<ArrayList<Integer>> x = I.get(r.get(p));
+                            // x.remove(s);
+                            //I.put(r.get(p), x);
+                            // j++;
+                            if (start.containsKey(key)) {
+                                Integer value = start.get(key) + 1;
+                                start.put(key, value);
+                            }else
+                                start.put(key, 1);
                         }
                         else {
                             if (!M.containsKey(s))
@@ -123,6 +132,7 @@ public class Demo {
             System.out.println("pi_r: " + ppl(r,t));
             System.out.println("pi_r^i: " + ipl(r,t));
             System.out.println("lb_r: " + lb(r,t));
+            System.out.println("start: " + start);
             System.out.println("I: " + I);
             System.out.println("M: " + M);
 
