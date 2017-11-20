@@ -3,9 +3,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.lang.management.ThreadMXBean;
 import java.util.*;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
 public class AllPairs {
@@ -74,17 +71,18 @@ public class AllPairs {
     }
 
     // size lower bound on join partners for r
-    private static int lb(ArrayList<Integer> r, double t){
-        return (int)Math.ceil(r.size()*t);
+    private static double lb(ArrayList<Integer> r, double t){
+        return r.size()*t;
     }
 
     // size upper bound on join partners for r
     private static int ub(ArrayList<Integer> r, double t){
         return (int)Math.floor(r.size()/t);
     }
+
     // probing prefix length, pseudo code pi_r
     private static int ppl(ArrayList<Integer> r, double t){
-        return (r.size() - lb(r, t) + 1);
+        return (r.size() - (int)Math.ceil(lb(r, t)) + 1);
     }
 
     // indexing prefix length, pseudo code (pi_r)^I
@@ -92,8 +90,7 @@ public class AllPairs {
         return (r.size() - eqo(r, r, t) + 1);
     }
 
-
-    // verify
+    //verify
     private static int verify(ArrayList<Integer> r, HashMap<ArrayList<Integer>, Integer> M, double t){
         int outputsize = 0;
         ArrayList<ArrayList<Integer>> res = new ArrayList<>();
@@ -106,12 +103,12 @@ public class AllPairs {
             int maxr = r.size();
             int maxs = s.size();
             while (maxr >= minoverlap && maxs >= minoverlap && minoverlap > overlap) {
-                if (r.get(pr) == s.get(ps)) {
+                if (Objects.equals(r.get(pr), s.get(ps))) {
                     pr++;
                     ps++;
                     overlap++;
                 } else {
-                    if (r.get(pr) < s.get(ps)) {
+                    if (r.get(pr).compareTo(s.get(ps))<0) {
                         pr++;
                         maxr--;
                     } else {
@@ -138,11 +135,7 @@ public class AllPairs {
             for (int p = 0; p < ppl(r, t); p++) {
                 Integer key = r.get(p);
                 if (I.get(key)!=null) {
-                    int j;
-                    if (start.containsKey(key))
-                        j = start.get(key);
-                    else
-                        j = 0;
+                    int j = start.getOrDefault(key, 0);
                     for (int i = j; i < I.get(key).size(); i++) {
                         int idx = I.get(key).get(i);
                         ArrayList<Integer> s = R.get(idx);
@@ -172,7 +165,7 @@ public class AllPairs {
             //System.out.println("I: " + I);
             //System.out.println("M: " + M);
             if(M.size()>0)
-                res += verify(r,M,t);
+                res += verify(r, M, t);
         }
         return res;
     }
