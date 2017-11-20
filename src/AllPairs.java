@@ -93,7 +93,6 @@ public class AllPairs {
     //verify
     private static int verify(ArrayList<Integer> r, HashMap<ArrayList<Integer>, Integer> M, double t){
         int outputsize = 0;
-        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
         for (Map.Entry<ArrayList<Integer>, Integer> e : M.entrySet()) {
             ArrayList<Integer> s = e.getKey();
             int minoverlap = eqo(r, s, t);
@@ -136,6 +135,8 @@ public class AllPairs {
                 Integer key = r.get(p);
                 if (I.get(key)!=null) {
                     int j = start.getOrDefault(key, 0);
+                    if (j>=I.get(key).size())
+                        start.remove(key);
                     for (int i = j; i < I.get(key).size(); i++) {
                         int idx = I.get(key).get(i);
                         ArrayList<Integer> s = R.get(idx);
