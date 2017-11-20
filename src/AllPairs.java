@@ -52,8 +52,8 @@ public class AllPairs {
             line = b.readLine();
         }
 
+        // sort set
         set.sort(Comparator.comparingInt(ArrayList::size));
-
         for (ArrayList<Integer> i: set)
             Collections.sort(i);
 
