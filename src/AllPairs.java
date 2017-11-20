@@ -52,6 +52,10 @@ public class AllPairs {
             line = b.readLine();
         }
 
+        set.sort(Comparator.comparingInt(ArrayList::size));
+
+        for (ArrayList<Integer> i: set)
+            Collections.sort(i);
 
         start = threadTimer.getCurrentThreadCpuTime();
 
