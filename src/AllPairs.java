@@ -135,8 +135,11 @@ public class AllPairs {
                 Integer key = r.get(p);
                 if (I.get(key)!=null) {
                     int j = start.getOrDefault(key, 0);
-                    if (j>=I.get(key).size())
-                        start.remove(key);
+                    // storage optimisation
+//                    if (j>=I.get(key).size()) {
+//                        I.remove(key);
+//                        start.remove(key);
+//                    }
                     for (int i = j; i < I.get(key).size(); i++) {
                         int idx = I.get(key).get(i);
                         ArrayList<Integer> s = R.get(idx);
