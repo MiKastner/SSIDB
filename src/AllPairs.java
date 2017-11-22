@@ -13,8 +13,6 @@ public class AllPairs {
         final ThreadMXBean threadTimer= ManagementFactory.getThreadMXBean();
         final long start;
 
-
-
         // exit if no command line argument present or invalid filename
         if (args.length == 0 || !new File(args[0]).exists()) {
             System.out.println("Please enter a valid filename as argument!");
@@ -31,7 +29,6 @@ public class AllPairs {
         String line = b.readLine();
 
         // as long as there are lines in the file
-
 
         ArrayList<ArrayList<Integer>> set = new ArrayList<>();
 
@@ -104,14 +101,15 @@ public class AllPairs {
             int pr = ppl(r, t);
             int ps = ipl(s, t);
             int overlap = M.get(idx);
-            if (r.get(pr-1)<s.get(ps-1)) {
+			
+            if (r.get(pr-1)<s.get(ps-1))
                 ps = overlap;
-            }
-            else {
+            else
                 pr = overlap;
-            }
+			
             int maxr = r.size()-pr+overlap;
             int maxs = s.size()-ps+overlap;
+			
             while (maxr >= eqoverlap && maxs >= eqoverlap && eqoverlap > overlap) {
                 if (Objects.equals(r.get(pr), s.get(ps))) {
                     pr++;
@@ -127,9 +125,8 @@ public class AllPairs {
                     }
                 }
             }
-            if(eqoverlap <= overlap){
+            if(eqoverlap <= overlap)
                 res++;
-            }
         }
         return res;
     }
