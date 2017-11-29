@@ -4,6 +4,8 @@ import java.io.FileReader;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AllPairs {
 
@@ -20,6 +22,7 @@ public class AllPairs {
         }
 
         double threshold = Double.parseDouble(args[1]);
+        ArrayList<ArrayList<Integer>> set = new ArrayList<>();
 
         // open file for reading
         // if the file is not found the method will throw an exception and exit
@@ -29,22 +32,13 @@ public class AllPairs {
         String line = b.readLine();
 
         // as long as there are lines in the file
-
-        ArrayList<ArrayList<Integer>> set = new ArrayList<>();
-
         while (line != null) {
-            ArrayList<Integer> item = new ArrayList<>();
-            StringBuilder s = new StringBuilder();
 
-            for (int j=0; j<line.length(); j++) {
-                if (line.charAt(j) != ' ')
-                    s.append(line.charAt(j));
-                if (line.charAt(j) == ' ' || j==line.length()-1){
-                    item.add(Integer.parseInt(s.toString()));
-                    s = new StringBuilder();
-                }
-            }
+            //parse line -> make stream -> map integers -> make ArrayList
+            ArrayList<Integer> item = Stream.of(line.split(" ")).mapToInt(Integer::parseInt).boxed().collect(Collectors.toCollection(ArrayList::new));
+
             set.add(item);
+
             // read next line from file
             line = b.readLine();
         }
